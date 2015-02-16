@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:androidQRReader="http://schemas.android.com/apk/res-auto"  >
+
+    <item
+        android:id="@+id/action_collection"
+        android:icon="@drawable/ic_action_collection"
+        android:orderInCategory="100"
+        androidQRReader:showAsAction="ifRoom"
+        android:title="@string/action_collection"/>
+    
+    <item android:id="@+id/action_web_site"
+          android:icon="@drawable/ic_action_web_site"
+          android:title="@string/action_web_site"
+          androidQRReader:showAsAction="ifRoom"/>
+
+</menu>
