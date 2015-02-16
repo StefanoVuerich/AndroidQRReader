@@ -55,7 +55,8 @@ public class HistoryListFragment extends Fragment implements OnItemClickListener
 			
 			@Override
 			public void onClick(View v) {
-				getActivity().getContentResolver().delete(QRReaderContentProvider.URLS_URI, null, null);
+				ConfirmURLDeleteFragment confirmDialofFragment = ConfirmURLDeleteFragment.getInstance(ConfirmURLDeleteFragment.ALL_TAG);
+				confirmDialofFragment.show(getFragmentManager(), ConfirmURLDeleteFragment._TAG);
 			}
 		});
 		

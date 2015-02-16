@@ -113,14 +113,14 @@ public class ResultsActivity extends ActionBarActivity implements
 		View currentView;
 		View x;
 		String flag;
-		if((x = findViewById(R.id.webViewContainer)) != null) {
+		if ((x = findViewById(R.id.webViewContainer)) != null) {
 			currentView = x;
 			flag = WebViewFragment._TAG;
 		} else {
 			currentView = findViewById(R.id.historyListContainer);
 			flag = HistoryListFragment._TAG;
 		}
-		
+
 		switch (item.getItemId()) {
 		case R.id.action_web_site:
 			if (!flag.equals(WebViewFragment._TAG)) {
@@ -168,8 +168,13 @@ public class ResultsActivity extends ActionBarActivity implements
 
 	@Override
 	public void OnDeleteConfirmed(long id) {
-		getContentResolver().delete(QRReaderContentProvider.URLS_URI,
-				UrlsHelper._ID + "=" + id, null);
+		if (id == -1) {
+			getContentResolver().delete(QRReaderContentProvider.URLS_URI, null,
+					null);
+		} else {
+			getContentResolver().delete(QRReaderContentProvider.URLS_URI,
+					UrlsHelper._ID + "=" + id, null);
+		}
 	}
 
 	@Override
