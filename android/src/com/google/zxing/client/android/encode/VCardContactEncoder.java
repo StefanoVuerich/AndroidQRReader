@@ -16,8 +16,6 @@
 
 package com.google.zxing.client.android.encode;
 
-import android.provider.ContactsContract;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,6 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import android.provider.ContactsContract;
 
 /**
  * Encodes contact information according to the vCard format.

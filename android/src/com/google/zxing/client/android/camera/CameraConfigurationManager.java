@@ -110,6 +110,7 @@ final class CameraConfigurationManager {
 		parameters.setPreviewSize(cameraResolution.x, cameraResolution.y);
 
 		Log.i(TAG, "Final camera parameters: " + parameters.flatten());
+		//Log.v("jajaja", "final param: x->" + cameraResolution.x + " - y->" + cameraResolution.y);
 
 		camera.setParameters(parameters);
 

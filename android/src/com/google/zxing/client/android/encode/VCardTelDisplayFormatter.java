@@ -16,12 +16,12 @@
 
 package com.google.zxing.client.android.encode;
 
-import android.telephony.PhoneNumberUtils;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import android.telephony.PhoneNumberUtils;
 
 /**
  * @author Sean Owen

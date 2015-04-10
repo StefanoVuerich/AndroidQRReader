@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:drawable="@drawable/ic_ab_back_holo_light"
+        android:left="0dp">
+    </item>
+
+
+    <item android:left="50dp">
+        <bitmap android:src="@drawable/lqc_logo_lo" />
+    </item>
+
+</merge>

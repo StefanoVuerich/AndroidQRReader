@@ -16,29 +16,19 @@
 
 package com.google.zxing.client.android;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.Result;
-import com.google.zxing.ResultMetadataType;
-import com.google.zxing.ResultPoint;
-import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.clipboard.ClipboardInterface;
-import com.google.zxing.client.android.history.HistoryActivity;
-import com.google.zxing.client.android.history.HistoryItem;
-import com.google.zxing.client.android.history.HistoryManager;
-import com.google.zxing.client.android.result.ResultButtonListener;
-import com.google.zxing.client.android.result.ResultHandler;
-import com.google.zxing.client.android.result.ResultHandlerFactory;
-import com.google.zxing.client.android.result.supplement.SupplementalInfoRetriever;
-import com.google.zxing.client.android.share.ShareActivity;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.Map;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -47,28 +37,33 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.Map;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.DecodeHintType;
+import com.google.zxing.Result;
+import com.google.zxing.ResultMetadataType;
+import com.google.zxing.ResultPoint;
+import com.google.zxing.client.android.camera.CameraManager;
+import com.google.zxing.client.android.clipboard.ClipboardInterface;
+import com.google.zxing.client.android.history.HistoryItem;
+import com.google.zxing.client.android.history.HistoryManager;
+import com.google.zxing.client.android.result.ResultHandler;
+import com.google.zxing.client.android.result.ResultHandlerFactory;
+import com.lqc.androidqrreaderproject.fragments.MenuFragment;
+import com.lqc.androidqrreaderproject.fragments.WebViewFragment;
+import com.lqc.androidqrreaderproject.services.BaseKeepApplicationInFront;
+import com.lqc.androidqrreaderproject.soundmanager.Player;
+import com.lqc.androidqrreaderproject.utilities.FullScreenHelper;
 
 /**
  * This activity opens the camera and does the actual scanning on a background
@@ -104,7 +99,7 @@ public final class CaptureActivity extends Activity implements
 	private CaptureActivityHandler handler;
 	private Result savedResultToShow;
 	private ViewfinderView viewfinderView;
-	private TextView statusView;
+	//private TextView statusView;
 	private View resultView;
 	private Result lastResult;
 	private boolean hasSurface;
@@ -131,6 +126,11 @@ public final class CaptureActivity extends Activity implements
 	CameraManager getCameraManager() {
 		return cameraManager;
 	}
+	
+	public void updateActivity() {
+		this.onPause();
+		this.onResume();
+	}
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -138,7 +138,14 @@ public final class CaptureActivity extends Activity implements
 
 		Window window = getWindow();
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 		setContentView(R.layout.capture);
+
+		// insert fragment menu 
+		getFragmentManager()
+				.beginTransaction()
+				.replace(R.id.menuContainer, MenuFragment.get(),
+						MenuFragment._TAG).commit();
 
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
@@ -147,11 +154,14 @@ public final class CaptureActivity extends Activity implements
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 	}
-
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		
+		FullScreenHelper.get().enableFullScreenMode(this);
+		Player.get(this);
+		
 		// historyManager must be initialized here to update the history
 		// preference
 		historyManager = new HistoryManager(this);
@@ -170,7 +180,7 @@ public final class CaptureActivity extends Activity implements
 		viewfinderView.setCameraManager(cameraManager);
 
 		resultView = findViewById(R.id.result_view);
-		statusView = (TextView) findViewById(R.id.status_view);
+		//statusView = (TextView) findViewById(R.id.status_view);
 
 		handler = null;
 		lastResult = null;
@@ -251,7 +261,7 @@ public final class CaptureActivity extends Activity implements
 				String customPromptMessage = intent
 						.getStringExtra(Intents.Scan.PROMPT_MESSAGE);
 				if (customPromptMessage != null) {
-					statusView.setText(customPromptMessage);
+					//statusView.setText(customPromptMessage);
 				}
 
 			} else if (dataString != null
@@ -308,6 +318,16 @@ public final class CaptureActivity extends Activity implements
 		}
 		return false;
 	}
+	
+	
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+		
+		Log.v("jajaja", "on start");
+	}
 
 	@Override
 	protected void onPause() {
@@ -326,12 +346,35 @@ public final class CaptureActivity extends Activity implements
 			surfaceHolder.removeCallback(this);
 		}
 		super.onPause();
+		Log.v("jajaja", "on pause");
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		
+		/*Intent intent = new Intent(this, BaseKeepApplicationInFront.class);
+		stopService(intent);*/
+		
+		Log.v("jajaja", "on stop");
+	}
+	
+	
+
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+		/*Intent intent = new Intent(this, BaseKeepApplicationInFront.class);
+		startService(intent);*/
+		Log.v("jajaja", "on restart");
 	}
 
 	@Override
 	protected void onDestroy() {
 		inactivityTimer.shutdown();
 		super.onDestroy();
+		Log.v("jajaja", "on destroy");
 	}
 
 	@Override
@@ -364,33 +407,28 @@ public final class CaptureActivity extends Activity implements
 		return super.onKeyDown(keyCode, event);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater menuInflater = getMenuInflater();
-		menuInflater.inflate(R.menu.capture, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+	/*
+	 * @Override public boolean onCreateOptionsMenu(Menu menu) { MenuInflater
+	 * menuInflater = getMenuInflater(); menuInflater.inflate(R.menu.capture,
+	 * menu); return super.onCreateOptionsMenu(menu); }
+	 */
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		int itemId = item.getItemId();
-		if (itemId == R.id.menu_share) {
-			intent.setClassName(this, ShareActivity.class.getName());
-			startActivity(intent);
-		} else if (itemId == R.id.menu_history) {
-			intent.setClassName(this, HistoryActivity.class.getName());
-			startActivityForResult(intent, HISTORY_REQUEST_CODE);
-		} else if (itemId == R.id.menu_settings) {
-			intent.setClassName(this, PreferencesActivity.class.getName());
-			startActivity(intent);
-		} else if (itemId == R.id.menu_help) {
-			intent.setClassName(this, HelpActivity.class.getName());
-			startActivity(intent);
-		} else {
-			return super.onOptionsItemSelected(item);
-		}
+		/*
+		 * Intent intent = new Intent(Intent.ACTION_VIEW);
+		 * intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET); int
+		 * itemId = item.getItemId(); if (itemId == R.id.menu_share) {
+		 * intent.setClassName(this, ShareActivity.class.getName());
+		 * startActivity(intent); } else if (itemId == R.id.menu_history) {
+		 * intent.setClassName(this, HistoryActivity.class.getName());
+		 * startActivityForResult(intent, HISTORY_REQUEST_CODE); } else if
+		 * (itemId == R.id.menu_settings) { intent.setClassName(this,
+		 * PreferencesActivity.class.getName()); startActivity(intent); } else
+		 * if (itemId == R.id.menu_help) { intent.setClassName(this,
+		 * HelpActivity.class.getName()); startActivity(intent); } else { return
+		 * super.onOptionsItemSelected(item); }
+		 */
 		return true;
 	}
 
@@ -523,6 +561,9 @@ public final class CaptureActivity extends Activity implements
 	 */
 	private void drawResultPoints(Bitmap barcode, float scaleFactor,
 			Result rawResult) {
+		
+		Log.v("jajaja","draw result points");
+		
 		ResultPoint[] points = rawResult.getResultPoints();
 		if (points != null && points.length > 0) {
 			Canvas canvas = new Canvas(barcode);
@@ -563,11 +604,23 @@ public final class CaptureActivity extends Activity implements
 			ResultHandler resultHandler, Bitmap barcode) {
 
 		String scanResult = rawResult.getText();
+
+		/*
+		 * Intent resultIntent = new Intent(this,
+		 * com.lqc.androidqrreaderproject.activities.ResultsActivity.class);
+		 * resultIntent.putExtra(this.RESULT_VALUES_TAG, scanResult);
+		 * startActivity(resultIntent);
+		 */
+
+		Fragment fragment = WebViewFragment.get(scanResult);
+		getFragmentManager()
+				.beginTransaction()
+				.replace(R.id.webViewFragmentContainer, fragment,
+						WebViewFragment._TAG).commit();
 		
-		Intent resultIntent = new Intent(this,
-				com.lqc.androidqrreaderproject.activities.ResultsActivity.class);
-		resultIntent.putExtra(this.RESULT_VALUES_TAG, scanResult);
-		startActivity(resultIntent);
+		
+		/*this.onPause();
+		this.onResume();*/
 
 		/*
 		 * CharSequence displayContents = resultHandler.getDisplayContents();
@@ -674,8 +727,8 @@ public final class CaptureActivity extends Activity implements
 			if (rawResultString.length() > 32) {
 				rawResultString = rawResultString.substring(0, 32) + " ...";
 			}
-			statusView.setText(getString(resultHandler.getDisplayTitle())
-					+ " : " + rawResultString);
+			/*statusView.setText(getString(resultHandler.getDisplayTitle())
+					+ " : " + rawResultString);*/
 		}
 
 		if (copyToClipboard && !resultHandler.areContentsSecure()) {
@@ -814,8 +867,8 @@ public final class CaptureActivity extends Activity implements
 
 	private void resetStatusView() {
 		resultView.setVisibility(View.GONE);
-		statusView.setText(R.string.msg_default_status);
-		statusView.setVisibility(View.VISIBLE);
+		/*statusView.setText(R.string.msg_default_status);
+		statusView.setVisibility(View.VISIBLE);*/
 		viewfinderView.setVisibility(View.VISIBLE);
 		lastResult = null;
 	}

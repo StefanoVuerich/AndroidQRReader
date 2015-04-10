@@ -16,10 +16,10 @@
 
 package com.google.zxing.client.android.encode;
 
-import android.telephony.PhoneNumberUtils;
-
 import java.util.List;
 import java.util.regex.Pattern;
+
+import android.telephony.PhoneNumberUtils;
 
 /**
  * Encodes contact information according to the MECARD format.

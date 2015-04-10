@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,9 @@ public class ResultsActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
+		Log.v("jajaja","on create called");
+		
+		
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		requestWindowFeature(Window.FEATURE_PROGRESS);
 
@@ -52,11 +56,11 @@ public class ResultsActivity extends ActionBarActivity implements
 			scanResult = savedInstanceState.getString(CURRENT_URL);
 			fragmentFlag = savedInstanceState
 					.getString(CURRENT_ACTIVE_FRAGMENT);
-			if (fragmentFlag == WebViewFragment._TAG) {
+			/*if (fragmentFlag == WebViewFragment._TAG) {
 				showWebViewFragment("");
 			} else {
 				showHistoryListFragment();
-			}
+			}*/
 		} else {
 			initDB();
 
@@ -78,6 +82,7 @@ public class ResultsActivity extends ActionBarActivity implements
 	private void setActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
 		actionBar.setLogo(R.drawable.lqc_logo_lo);
 		actionBar.setDisplayUseLogoEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(true);

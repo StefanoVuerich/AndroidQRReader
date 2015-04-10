@@ -80,7 +80,10 @@ public class HistoryListFragment extends Fragment implements OnItemClickListener
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		ConfirmURLDeleteFragment confirmDialofFragment = ConfirmURLDeleteFragment.getInstance(id);
+		
+		TextView currentView = (TextView) ((LinearLayout) view).getChildAt(0);
+		
+		ConfirmURLDeleteFragment confirmDialofFragment = ConfirmURLDeleteFragment.getInstance(id, currentView.getText().toString());
 		confirmDialofFragment.show(getFragmentManager(), ConfirmURLDeleteFragment._TAG);
 		return true;
 	}

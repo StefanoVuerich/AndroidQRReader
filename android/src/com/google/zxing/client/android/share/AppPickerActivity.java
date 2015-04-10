@@ -16,6 +16,8 @@
 
 package com.google.zxing.client.android.share;
 
+import java.util.List;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -23,8 +25,6 @@ import android.provider.Browser;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ListView;
-
-import java.util.List;
 
 public final class AppPickerActivity extends ListActivity {
 

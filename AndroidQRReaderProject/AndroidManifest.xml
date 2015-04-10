@@ -18,18 +18,22 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.GET_DETAILED_TASKS" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/lqc_logo_lo"
         android:label="@string/app_name"
         android:logo="@drawable/lqc_logo_lo"
-        android:screenOrientation="portrait" >
+        android:screenOrientation="portrait" 
+        android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
         <activity
             android:name="com.google.zxing.client.android.CaptureActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,18 +42,26 @@
         </activity>
         <activity
             android:name=".activities.ResultsActivity"
-            android:icon="@drawable/lqc_logo_lo"
-            android:theme="@style/Theme.AppCompat.Light" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.google.zxing.client.android.CaptureActivity" />
         </activity>
-
+        <activity 
+            android:name=".activities.SettingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity 
+            android:name=".activities.SearchActivity"
+            android:screenOrientation="portrait"/>
         <provider
             android:name="com.lqc.androidqrreaderproject.contentprovider.QRReaderContentProvider"
             android:authorities="com.lqc.androidqrreaderproject.contentprovider.qrreadercontentprovider"
             android:exported="false" >
         </provider>
+        
+        <service 
+            android:name=".services.BaseKeepApplicationInFront"></service>
     </application>
 
 </manifest>

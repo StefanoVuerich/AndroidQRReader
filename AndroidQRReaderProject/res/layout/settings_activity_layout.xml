@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/menuContainer"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp" >
+
+        <TextView
+            android:id="@+id/cinemeIDTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cinema ID"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/cinemaIDEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/feedbackCinemaID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CinemaID can&apos;t be empty"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#FF0000"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/deviceIDTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Device ID"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/deviceIDEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/feedbackDeviceID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DeviceID can&apos;t be empty"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#FF0000"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/devicePasswordTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Device Password"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/devicePasswordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/feedbackDevicePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Device password can&apos;t be empty"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#FF0000"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Save" />
+
+        <TextView
+            android:id="@+id/feedbackDataSaved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data saved succesfully"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#00CC00"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+</LinearLayout>
