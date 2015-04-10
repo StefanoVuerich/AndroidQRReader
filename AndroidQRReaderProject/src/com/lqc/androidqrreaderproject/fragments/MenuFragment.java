@@ -84,11 +84,9 @@ public class MenuFragment extends Fragment {
 			params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 			scan.setLayoutParams(params);
 		} else if(currentActivity.equals(SettingsActivity.class.getSimpleName())) {
-			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)scan.getLayoutParams();
-			params.addRule(RelativeLayout.LEFT_OF, R.id.searchButton);
-			params.setMargins(0, 0, 0, 0);
-			scan.setLayoutParams(params);
 			settings.setVisibility(View.GONE);
+			scan.setVisibility(View.GONE);
+			search.setVisibility(View.GONE);
 		}
 
 		return rootView;

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.lqc.androidqrreaderproject.R;
+import com.lqc.androidqrreaderproject.configurationstorage.ConfigurationStorage;
 import com.lqc.androidqrreaderproject.fragments.MenuFragment;
 import com.lqc.androidqrreaderproject.login.LoginHandler;
 import com.lqc.androidqrreaderproject.utilities.FullScreenHelper;
@@ -63,19 +64,36 @@ public class SettingsActivity extends Activity {
 										.setVisibility(View.VISIBLE);
 							}
 						} else {
+							ConfigurationStorage.getInstance()
+									.initConfigurationStorage(
+											SettingsActivity.this);
+
+							ConfigurationStorage.getInstance().updateAll(
+									SettingsActivity.this,
+									cinemaID.getText().toString(),
+									deviceID.getText().toString(),
+									devicePassword.getText().toString());
+
 							((TextView) findViewById(R.id.feedbackDataSaved))
 									.setVisibility(View.VISIBLE);
-							// check if preferences file exist
 
-							// if file not exist create file
+							new Thread(new Runnable() {
 
-							// save data update data on file
-
+								@Override
+								public void run() {
+									try {
+										Thread.sleep(1000);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+									SettingsActivity.this.finish();
+								}
+							}).start();
 						}
 					}
 				});
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();

@@ -14,25 +14,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-import com.google.zxing.client.android.CaptureActivity;
 import com.lqc.androidqrreaderproject.R;
 import com.lqc.androidqrreaderproject.soundmanager.Player;
-import com.lqc.androidqrreaderproject.utilities.SharedPreferencesHelper;
 
-public class WebViewFragment extends Fragment {
+public class BottomSearchActivityWebView extends Fragment {
 
-	public static final String _TAG = WebViewFragment.class.getSimpleName();
+	public static final String _TAG = BottomSearchActivityWebView.class.getSimpleName();
 	private static final String URL_TAG = "UrlTag";
-	private static final String SEPARATOR = "&";
 	private WebView webView;
-	private Activity activity;
 	private ProgressBar progressBar;
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		this.activity = activity;
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,30 +48,13 @@ public class WebViewFragment extends Fragment {
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
 				super.onPageStarted(view, url, favicon);
-				WebViewFragment.this.progressBar.setVisibility(View.VISIBLE);
+				BottomSearchActivityWebView.this.progressBar.setVisibility(View.VISIBLE);
 			}
 
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				super.onPageFinished(view, url);
-				WebViewFragment.this.progressBar.setVisibility(View.GONE);
-			}
-
-			@Override
-			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				if (url.startsWith("http")) {
-					if (url.contains("valid=true")) {
-						Log.v("jajaja", "ticekt is valid");
-						Player.get(getActivity()).playTicketIsValidSound();
-
-					} else {
-						Log.v("jajaja", "ticekt is NOT valid");
-						Player.get(getActivity()).playTicketIsNotValidSound();
-					}
-					updateCaptureView();
-					Log.v("jajaja", "want to update view");
-				}
-				return false;
+				BottomSearchActivityWebView.this.progressBar.setVisibility(View.GONE);
 			}
 
 		});
@@ -89,17 +62,8 @@ public class WebViewFragment extends Fragment {
 			Bundle bundle = getArguments();
 			if (bundle != null) {
 				String url = bundle.getString(URL_TAG);
-
-				String[] deviceInfo = new SharedPreferencesHelper(getActivity())
-						.getDeviceInfo();
-				url = new StringBuilder(url)
-						.append(SEPARATOR).append(deviceInfo[0])
-						.append(SEPARATOR).append(deviceInfo[1])
-						.append(SEPARATOR).append(deviceInfo[2]).toString();
-
 				if (url != null) {
 					webView.loadUrl(url);
-					Log.v("jajaja", url);
 				}
 			}
 		} else {
@@ -109,23 +73,7 @@ public class WebViewFragment extends Fragment {
 
 		return rootView;
 	}
-
-	private void updateCaptureView() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Log.v("jajaja", "run thread");
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				((CaptureActivity) getActivity()).updateActivity();
-				Log.v("jajaja", "on pause and on resume");
-			}
-		}).run();
-	}
-
+	
 	private void setProgress(int progress) {
 		this.progressBar.setProgress(progress);
 	}
@@ -138,16 +86,12 @@ public class WebViewFragment extends Fragment {
 		}
 	}
 
-	public static WebViewFragment get(String url) {
+	public static BottomSearchActivityWebView get(String url) {
 
-		WebViewFragment fragment = new WebViewFragment();
+		BottomSearchActivityWebView fragment = new BottomSearchActivityWebView();
 		Bundle vBundle = new Bundle();
 		vBundle.putString(URL_TAG, url);
 		fragment.setArguments(vBundle);
 		return fragment;
-	}
-
-	public void getDeviceInfo() {
-
 	}
 }
