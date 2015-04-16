@@ -1,11 +1,8 @@
 package com.lqc.androidqrreaderproject.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,6 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.lqc.androidqrreaderproject.R;
-import com.lqc.androidqrreaderproject.soundmanager.Player;
 
 public class TopSearchActivityWebView extends Fragment {
 

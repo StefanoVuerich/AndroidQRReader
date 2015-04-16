@@ -2,7 +2,6 @@ package com.lqc.androidqrreaderproject.configurationstorage;
 
 import java.io.File;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -14,16 +13,16 @@ public class ConfigurationStorage {
 	public static final String DEVICE_ID = "DeviceID";
 	public static final String DEVICE_PASSWORD = "DevicePassword";
 	public static final String STORAGE_FILE_NAME = "qr_reader_app_storage.xml";
-	private static ConfigurationStorage instance;
+	private static ConfigurationStorage mInstance;
 
 	private ConfigurationStorage() {
 	}
 
 	public static ConfigurationStorage getInstance() {
-		if (instance == null) {
-			instance = new ConfigurationStorage();
+		if (mInstance == null) {
+			mInstance = new ConfigurationStorage();
 		}
-		return instance;
+		return mInstance;
 	}
 	
 	public void updateAll(Context context, String cinemaID, String deviceID, String password) {
@@ -62,14 +61,14 @@ public class ConfigurationStorage {
 		editor.commit();
 	}
 	
-	public void initConfigurationStorage(Activity activity) {
+	public void initConfigurationStorage(Context context) {
 		String filename = ConfigurationStorage.STORAGE_FILE_NAME;
 		String filePath = Environment.getDataDirectory().getAbsolutePath()
-				+ "/data/" + activity.getPackageName() + "/shared_prefs/" + filename;
+				+ "/data/" + context.getPackageName() + "/shared_prefs/" + filename;
 		File file = new File(filePath);
 
 		if (!file.exists()) {
-			init(activity);
+			init(context);
 		}
 	}
 }

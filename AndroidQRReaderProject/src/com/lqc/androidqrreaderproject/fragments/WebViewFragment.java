@@ -1,9 +1,9 @@
 package com.lqc.androidqrreaderproject.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,16 +17,15 @@ import android.widget.ProgressBar;
 import com.google.zxing.client.android.CaptureActivity;
 import com.lqc.androidqrreaderproject.R;
 import com.lqc.androidqrreaderproject.soundmanager.Player;
-import com.lqc.androidqrreaderproject.utilities.SharedPreferencesHelper;
 
 public class WebViewFragment extends Fragment {
 
 	public static final String _TAG = WebViewFragment.class.getSimpleName();
 	private static final String URL_TAG = "UrlTag";
-	private static final String SEPARATOR = "&";
 	private WebView webView;
 	private Activity activity;
 	private ProgressBar progressBar;
+	boolean loaded = true;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -34,6 +33,7 @@ public class WebViewFragment extends Fragment {
 		this.activity = activity;
 	}
 
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -44,20 +44,22 @@ public class WebViewFragment extends Fragment {
 		webView = (WebView) rootView.findViewById(R.id.webView);
 		progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
-		webView.getSettings().setJavaScriptEnabled(true);
-
 		webView.setWebChromeClient(new WebChromeClient() {
 
 			public void onProgressChanged(WebView view, int progress) {
 				setProgress(progress);
+
 			}
 
 		});
+
 		webView.setWebViewClient(new WebViewClient() {
 
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
 				super.onPageStarted(view, url, favicon);
+				Log.v("jajaja", "start loading page");
+				loaded = false;
 				WebViewFragment.this.progressBar.setVisibility(View.VISIBLE);
 			}
 
@@ -65,20 +67,34 @@ public class WebViewFragment extends Fragment {
 			public void onPageFinished(WebView view, String url) {
 				super.onPageFinished(view, url);
 				WebViewFragment.this.progressBar.setVisibility(View.GONE);
+				// updateCaptureView();
+				loaded = true;
+				new Runnable() {
+
+					@Override
+					public void run() {
+						updateCaptureView();
+					}
+				}.run();
+				Log.v("jajaja", "loading page FINISHED");
 			}
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				Log.v("jajaja", "shoul override: " + url);
+
 				if (url.startsWith("http")) {
+
 					if (url.contains("valid=true")) {
-						Log.v("jajaja", "ticekt is valid");
+						Log.v("jajaja", "ticekt is valid playsound");
 						Player.get(getActivity()).playTicketIsValidSound();
 
 					} else {
 						Log.v("jajaja", "ticekt is NOT valid");
 						Player.get(getActivity()).playTicketIsNotValidSound();
+
 					}
-					updateCaptureView();
+
 					Log.v("jajaja", "want to update view");
 				}
 				return false;
@@ -88,19 +104,18 @@ public class WebViewFragment extends Fragment {
 		if (savedInstanceState == null) {
 			Bundle bundle = getArguments();
 			if (bundle != null) {
-				String url = bundle.getString(URL_TAG);
+				final String url = bundle.getString(URL_TAG);
 
-				String[] deviceInfo = new SharedPreferencesHelper(getActivity())
-						.getDeviceInfo();
-				url = new StringBuilder(url)
-						.append(SEPARATOR).append(deviceInfo[0])
-						.append(SEPARATOR).append(deviceInfo[1])
-						.append(SEPARATOR).append(deviceInfo[2]).toString();
+				// url = UrlParser.parseUrl(getActivity(), url);
+				new Thread(new Runnable() {
 
-				if (url != null) {
-					webView.loadUrl(url);
-					Log.v("jajaja", url);
-				}
+					@Override
+					public void run() {
+						Log.v("jajaja", "load url: " + url);
+						webView.loadUrl(url);
+					}
+				}).run();
+
 			}
 		} else {
 			Bundle mBundle = savedInstanceState;
@@ -111,19 +126,9 @@ public class WebViewFragment extends Fragment {
 	}
 
 	private void updateCaptureView() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Log.v("jajaja", "run thread");
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				((CaptureActivity) getActivity()).updateActivity();
-				Log.v("jajaja", "on pause and on resume");
-			}
-		}).run();
+
+		((CaptureActivity) getActivity()).updateActivity();
+		Log.v("jajaja", "on pause and on resume");
 	}
 
 	private void setProgress(int progress) {

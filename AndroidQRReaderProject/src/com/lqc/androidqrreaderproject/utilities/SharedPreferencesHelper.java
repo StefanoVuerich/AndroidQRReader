@@ -1,9 +1,9 @@
 package com.lqc.androidqrreaderproject.utilities;
 
-import com.lqc.androidqrreaderproject.configurationstorage.ConfigurationStorage;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.lqc.androidqrreaderproject.configurationstorage.ConfigurationStorage;
 
 public class SharedPreferencesHelper {
 

@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Map;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -45,7 +44,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -61,7 +59,6 @@ import com.google.zxing.client.android.result.ResultHandler;
 import com.google.zxing.client.android.result.ResultHandlerFactory;
 import com.lqc.androidqrreaderproject.fragments.MenuFragment;
 import com.lqc.androidqrreaderproject.fragments.WebViewFragment;
-import com.lqc.androidqrreaderproject.services.BaseKeepApplicationInFront;
 import com.lqc.androidqrreaderproject.soundmanager.Player;
 import com.lqc.androidqrreaderproject.utilities.FullScreenHelper;
 
@@ -141,7 +138,7 @@ public final class CaptureActivity extends Activity implements
 
 		setContentView(R.layout.capture);
 
-		// insert fragment menu 
+		// insert menu fragment
 		getFragmentManager()
 				.beginTransaction()
 				.replace(R.id.menuContainer, MenuFragment.get(),
@@ -318,16 +315,6 @@ public final class CaptureActivity extends Activity implements
 		}
 		return false;
 	}
-	
-	
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		
-		
-		Log.v("jajaja", "on start");
-	}
 
 	@Override
 	protected void onPause() {
@@ -348,33 +335,11 @@ public final class CaptureActivity extends Activity implements
 		super.onPause();
 		Log.v("jajaja", "on pause");
 	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-		
-		/*Intent intent = new Intent(this, BaseKeepApplicationInFront.class);
-		stopService(intent);*/
-		
-		Log.v("jajaja", "on stop");
-	}
-	
-	
-
-	@Override
-	protected void onRestart() {
-		// TODO Auto-generated method stub
-		super.onRestart();
-		/*Intent intent = new Intent(this, BaseKeepApplicationInFront.class);
-		startService(intent);*/
-		Log.v("jajaja", "on restart");
-	}
 
 	@Override
 	protected void onDestroy() {
 		inactivityTimer.shutdown();
 		super.onDestroy();
-		Log.v("jajaja", "on destroy");
 	}
 
 	@Override

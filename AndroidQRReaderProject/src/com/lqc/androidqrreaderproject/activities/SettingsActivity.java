@@ -15,11 +15,12 @@ import com.lqc.androidqrreaderproject.configurationstorage.ConfigurationStorage;
 import com.lqc.androidqrreaderproject.fragments.MenuFragment;
 import com.lqc.androidqrreaderproject.login.LoginHandler;
 import com.lqc.androidqrreaderproject.utilities.FullScreenHelper;
+import com.lqc.androidqrreaderproject.utilities.SharedPreferencesHelper;
 
 public class SettingsActivity extends Activity {
 
 	private EditText cinemaID, deviceID, devicePassword;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,9 +32,18 @@ public class SettingsActivity extends Activity {
 				.replace(R.id.menuContainer, MenuFragment.get(),
 						MenuFragment._TAG).commit();
 
+		
+		SharedPreferencesHelper sharedPref = new SharedPreferencesHelper(this);
+		String[] deviceInfo = sharedPref.getDeviceInfo();
+		
 		cinemaID = (EditText) findViewById(R.id.cinemaIDEditText);
+		cinemaID.setText(deviceInfo[0]);
+		
 		deviceID = (EditText) findViewById(R.id.deviceIDEditText);
+		deviceID.setText(deviceInfo[1]);
+		
 		devicePassword = (EditText) findViewById(R.id.devicePasswordEditText);
+		devicePassword.setText(deviceInfo[2]);
 
 		final List<TextView> feedbacksList = new ArrayList<TextView>();
 		feedbacksList.add((TextView) findViewById(R.id.feedbackCinemaID));
@@ -64,10 +74,6 @@ public class SettingsActivity extends Activity {
 										.setVisibility(View.VISIBLE);
 							}
 						} else {
-							ConfigurationStorage.getInstance()
-									.initConfigurationStorage(
-											SettingsActivity.this);
-
 							ConfigurationStorage.getInstance().updateAll(
 									SettingsActivity.this,
 									cinemaID.getText().toString(),
